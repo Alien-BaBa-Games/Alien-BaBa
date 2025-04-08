@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Play free online games at Alien BaBa Games - The best collection of action, adventure, puzzle, racing and strategy games.">
+    <meta name="keywords" content="online games, free games, play games, action games, puzzle games, Alien BaBa Games">
+    <meta name="author" content="Alien BaBa Games">
+    <title>Alien BaBa Games - Free Online Action, Puzzle & Adventure Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #0f0f12;
+            color: #ffffff;
+        }
+        
+        /* Sticky Gaming Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 25px;
+            background-color: #1a1a23;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+        
+        .left-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-icon {
+            margin-right: 20px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #00ff88;
+        }
+        
+        .logo {
+            height: 32px;
+            cursor: pointer;
+        }
+        
+        .center-section {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 30px;
+        }
+        
+        .search-bar {
+            flex-grow: 1;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 25px 0 0 25px;
+            font-size: 16px;
+            outline: none;
+            background-color: #2a2a35;
+            color: white;
+        }
+        
+        .search-button {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            background-color: #00ff88;
+            color: #1a1a23;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-icon {
+            margin-left: 25px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #d1d1d1;
+        }
+        
+        /* Main Content */
+        .container {
+            display: flex;
+            padding: 20px;
+        }
+        
+        /* Gaming Sidebar */
+        .sidebar {
+            width: 240px;
+            padding-right: 20px;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            color: #d1d1d1;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #2a2a35;
+            color: white;
+        }
+        
+        .sidebar-icon {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        
+        .sidebar-title {
+            margin: 20px 0 10px 15px;
+            font-size: 14px;
+            color: #6a6a75;
+            text-transform: uppercase;
+        }
+        
+        /* Sidebar Ad Space */
+        .sidebar-ad {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #2a2a35;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+        }
+        
+        .banner {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .banner-content {
+            z-index: 2;
+            max-width: 50%;
+        }
+        
+        .banner h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .banner p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .play-now-btn {
+            padding: 12px 25px;
+            background-color: #1a1a23;
+            color: #00ff88;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .banner-pattern {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            opacity: 0.1;
+        }
+        
+        .categories {
+            display: flex;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .category {
+            padding: 8px 16px;
+            margin-right: 10px;
+            background-color: #2a2a35;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: #d1d1d1;
+        }
+        
+        .category.active {
+            background-color: #00ff88;
+            color: #1a1a23;
+        }
+        
+        .games {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .game-card {
+            background-color: #1a1a23;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .thumbnail {
+            width: 100%;
+            height: 160px;
+            background-color: #2a2a35;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .players {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .players i {
+            margin-right: 5px;
+        }
+        
+        .game-info {
+            padding: 15px;
+        }
+        
+        .game-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .game-desc {
+            color: #a1a1aa;
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+        
+        .play-btn {
+            width: 100%;
+            padding: 8px;
+            background-color: #00ff88;
+            color: #1a1a23;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* In-content Ad Space */
+        .in-content-ad {
+            grid-column: 1 / -1;
+            padding: 20px;
+            background-color: #2a2a35;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* Featured Games Section */
+        .section-title {
+            font-size: 22px;
+            margin: 30px 0 20px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: #00ff88;
+        }
+
+        /* No results message */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #a1a1aa;
+            font-size: 18px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .banner-content {
+                max-width: 100%;
+            }
+            
+            .banner h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Sticky Gaming Navbar -->
+    <nav class="navbar">
+        <div class="left-section">
+            <div class="menu-icon"><i class="fas fa-gamepad"></i></div>
+            <img src="https://via.placeholder.com/150x40/00ff88/1a1a23?text=Alien+BaBa+Games" alt="Alien BaBa Games Logo" class="logo">
+        </div>
+        
+        <div class="center-section">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search games..." aria-label="Search games">
+            <button class="search-button" id="searchButton">Search</button>
+        </div>
+        
+        <div class="right-section">
+            <div class="nav-icon" aria-label="Leaderboard"><i class="fas fa-trophy"></i></div>
+            <div class="nav-icon" aria-label="Favorites"><i class="fas fa-heart"></i></div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Gaming Sidebar -->
+        <aside class="sidebar">
+            <nav>
+                <div class="sidebar-item" data-category="all">
+                    <div class="sidebar-icon"><i class="fas fa-home"></i></div>
+                    <span>Home</span>
+                </div>
+                <div class="sidebar-item" data-category="popular">
+                    <div class="sidebar-icon"><i class="fas fa-fire"></i></div>
+                    <span>Popular</span>
+                </div>
+                <div class="sidebar-item" data-category="new">
+                    <div class="sidebar-icon"><i class="fas fa-star"></i></div>
+                    <span>New Releases</span>
+                </div>
+                <div class="sidebar-item" data-category="multiplayer">
+                    <div class="sidebar-icon"><i class="fas fa-users"></i></div>
+                    <span>Multiplayer</span>
+                </div>
+                
+                <div class="sidebar-title">Categories</div>
+                
+                <div class="sidebar-item" data-category="racing">
+                    <div class="sidebar-icon"><i class="fas fa-car"></i></div>
+                    <span>Racing</span>
+                </div>
+                <div class="sidebar-item" data-category="shooter">
+                    <div class="sidebar-icon"><i class="fas fa-gun"></i></div>
+                    <span>Shooter</span>
+                </div>
+                <div class="sidebar-item" data-category="strategy">
+                    <div class="sidebar-icon"><i class="fas fa-chess"></i></div>
+                    <span>Strategy</span>
+                </div>
+                <div class="sidebar-item" data-category="puzzle">
+                    <div class="sidebar-icon"><i class="fas fa-puzzle-piece"></i></div>
+                    <span>Puzzle</span>
+                </div>
+                <div class="sidebar-item" data-category="sports">
+                    <div class="sidebar-icon"><i class="fas fa-running"></i></div>
+                    <span>Sports</span>
+                </div>
+            </nav>
+            
+            <!-- Sidebar Ad Space -->
+            <div class="sidebar-ad">
+                <h3>Advertisement</h3>
+                <div style="background-color: #3a3a45; padding: 60px 20px; margin: 10px 0; border-radius: 5px;">
+                    Google Ad (120x240)
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Featured Game Banner -->
+            <section class="banner">
+                <div class="banner-content">
+                    <h1>Alien Invasion 2023</h1>
+                    <p>Defend Earth from alien attacks in this action-packed shooter game with amazing graphics and multiplayer mode.</p>
+                    <button class="play-now-btn">PLAY NOW</button>
+                </div>
+                <img src="https://via.placeholder.com/600x300/00ff88/1a1a23?text=Alien+Invasion" class="banner-pattern" alt="Alien Invasion Banner">
+            </section>
+            
+            <!-- Game Categories -->
+            <div class="categories" id="categoryFilters">
+                <div class="category active" data-category="all">All Games</div>
+                <div class="category" data-category="action">Action</div>
+                <div class="category" data-category="adventure">Adventure</div>
+                <div class="category" data-category="racing">Racing</div>
+                <div class="category" data-category="puzzle">Puzzle</div>
+                <div class="category" data-category="sports">Sports</div>
+                <div class="category" data-category="strategy">Strategy</div>
+                <div class="category" data-category="shooter">Shooter</div>
+                <div class="category" data-category="multiplayer">Multiplayer</div>
+            </div>
+            
+            <!-- Featured Games Section -->
+            <h2 class="section-title">
+                <i class="fas fa-crown"></i>
+                <span>Featured Games</span>
+            </h2>
+            
+            <div class="games" id="gamesContainer">
+                <!-- Game cards will be dynamically inserted here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Game data
+        const games = [
+            {
+                id: 1,
+                title: "Alien Shooter",
+                description: "Fight against alien invaders in this intense first-person shooter with multiple weapons and levels.",
+                category: ["shooter", "action"],
+                players: "45K",
+                isPopular: true,
+                isNew: false,
+                isMultiplayer: true,
+                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Shooter"
+            },
+            {
+                id: 2,
+                title: "Space Race By AlienBaBa",
+                description: "Race through asteroid fields in this futuristic racing game with power-ups and boosts.",
+                category: ["racing", "action"],
+                players: "32K",
+                isPopular: true,
+                isNew: false,
+                isMultiplayer: true,
+                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Space+Race"
+            },
+            {
+                id: 3,
+                title: "Alien Puzzle",
+                description: "Solve challenging puzzles to help the friendly aliens return to their home planet.",
+                category: ["puzzle"],
+                players: "18K",
+                isPopular: false,
+                isNew: false,
+                isMultiplayer: false,
+                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Puzzle"
+            },
+            {
+                id: 4,
+                title: "Alien Soccer",
+                description: "Play soccer with alien teams featuring special abilities and futuristic stadiums.",
+                category: ["sports", "multiplayer"],
+                players: "28K",
+                isPopular: true,
+                isNew: false,
+                isMultiplayer: true,
+                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Soccer"
+            },
+            {
+                id: 5,
+                title: "Alien Strategy",
+                description: "Build your alien civilization and defend against human invasions in this strategy game.",
+                category: ["strategy"],
+                players: "36K",
+                isPopular: false,
+                isNew: true,
+                isMultiplayer: false,
+                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Strategy"
+            },
+            {
+                id: 6,
+                title: "Alien Jewels",
+                description: "Match colorful alien jewels in this addictive puzzle game with special power-ups.",
+                category: ["puzzle"],
+                players: "15K",
+                isPopular: false,
+                isNew: false,
+                isMultiplayer: false,
+                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Jewels"
+            },
+            {
+                id: 7,
+                title: "Alien Adventure",
+                description: "Explore alien planets and solve mysteries in this new action-adventure game.",
+                category: ["adventure", "action"],
+                players: "12K",
+                isPopular: false,
+                isNew: true,
+                isMultiplayer: false,
+                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Adventure"
+            },
+            {
+                id: 8,
+                title: "Alien Wild West",
+                description: "Cowboys meet aliens in this wild west themed shooter with unique weapons.",
+                category: ["shooter", "action"],
+                players: "8K",
+                isPopular: false,
+                isNew: true,
+                isMultiplayer: true,
+                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Wild+West"
+            },
+            {
+                id: 9,
+                title: "Alien Dragons",
+                description: "Collect and train alien dragons with special abilities in this new RPG game.",
+                category: ["strategy"],
+                players: "5K",
+                isPopular: false,
+                isNew: true,
+                isMultiplayer: false,
+                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Dragons"
+            }
+        ];
+
+        // DOM elements
+        const gamesContainer = document.getElementById('gamesContainer');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const categoryFilters = document.querySelectorAll('.category');
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+
+        // Current filter state
+        let currentCategory = 'all';
+        let currentSearchTerm = '';
+
+        // Initialize the page
+        function init() {
+            renderGames();
+            setupEventListeners();
+        }
+
+        // Render games based on current filters
+        function renderGames() {
+            gamesContainer.innerHTML = '';
+
+            const filteredGames = games.filter(game => {
+                // Filter by category
+                const categoryMatch = currentCategory === 'all' || 
+                                      game.category.includes(currentCategory) ||
+                                      (currentCategory === 'popular' && game.isPopular) ||
+                                      (currentCategory === 'new' && game.isNew) ||
+                                      (currentCategory === 'multiplayer' && game.isMultiplayer);
+                
+                // Filter by search term
+                const searchMatch = game.title.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+                                   game.description.toLowerCase().includes(currentSearchTerm.toLowerCase());
+                
+                return categoryMatch && searchMatch;
+            });
+
+            if (filteredGames.length === 0) {
+                gamesContainer.innerHTML = '<div class="no-results">No games found matching your criteria.</div>';
+                return;
+            }
+
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <div class="thumbnail">
+                        <img src="${game.thumbnail}" alt="${game.title}">
+                        <div class="players">
+                            <i class="fas fa-users"></i> ${game.players} playing
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">${game.title}</h3>
+                        <div class="game-desc">${game.description}</div>
+                        <button class="play-btn">Play Now</button>
+                    </div>
+                `;
+                gamesContainer.appendChild(gameCard);
+            });
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Search functionality
+            searchButton.addEventListener('click', () => {
+                currentSearchTerm = searchInput.value.trim();
+                renderGames();
+            });
+
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    currentSearchTerm = searchInput.value.trim();
+                    renderGames();
+                }
+            });
+
+            // Category filter buttons
+            categoryFilters.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active class
+                    categoryFilters.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Update filter and render games
+                    currentCategory = button.dataset.category;
+                    renderGames();
+                });
+            });
+
+            // Sidebar navigation
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Update active class on category buttons
+                    categoryFilters.forEach(btn => btn.classList.remove('active'));
+                    document.querySelector(`.category[data-category="${item.dataset.category}"]`).classList.add('active');
+                    
+                    // Update filter and render games
+                    currentCategory = item.dataset.category;
+                    renderGames();
+                });
+            });
+        }
+
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
