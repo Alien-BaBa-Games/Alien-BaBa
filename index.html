@@ -3,677 +3,1961 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Play free online games at Alien BaBa Games - The best collection of action, adventure, puzzle, racing and strategy games.">
-    <meta name="keywords" content="online games, free games, play games, action games, puzzle games, Alien BaBa Games">
-    <meta name="author" content="Alien BaBa Games">
-    <title>Alien BaBa Games - Free Online Action, Puzzle & Adventure Games</title>
+    <title>Guess the Word Game</title>
     <style>
-        * {
+        /* Main Content Styles */
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: auto;
         }
-        
-        body {
-            background-color: #0f0f12;
-            color: #ffffff;
+
+        .container {
+            width: 80vw;
+            aspect-ratio: 16/9;
+            max-width: 1000px;
+            margin-top: 20px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            background-color: var(--bg-color, #87CEEB);
+            border-radius: 0;
         }
-        
-        /* Sticky Gaming Navbar */
-        .navbar {
-            position: sticky;
-            top: 0;
+
+        /* Pattern Styles */
+        .pattern {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            opacity: var(--pattern-opacity, 0.2);
+            z-index: 0;
+            display: none;
+            animation: var(--pattern-animation, none);
+            animation-duration: var(--pattern-animation-speed, 20s);
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+
+        .spiral {
+            background: 
+                repeating-conic-gradient(
+                    from 0deg,
+                    transparent 0deg 10deg,
+                    var(--pattern-color, #FFD700) 10deg 20deg
+                );
+        }
+
+        .whatsapp-doodle {
+            background: 
+                radial-gradient(circle at 30% 30%, var(--pattern-color, #25D366) 0%, transparent 20%),
+                radial-gradient(circle at 70% 70%, var(--pattern-color, #25D366) 0%, transparent 20%),
+                radial-gradient(circle at 30% 70%, var(--pattern-color, #25D366) 0%, transparent 20%),
+                radial-gradient(circle at 70% 30%, var(--pattern-color, #25D366) 0%, transparent 20%);
+            background-size: 100px 100px;
+        }
+
+        .telegram-doodle {
+            background: 
+                linear-gradient(45deg, var(--pattern-color, #0088cc) 25%, transparent 25%),
+                linear-gradient(-45deg, var(--pattern-color, #0088cc) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, var(--pattern-color, #0088cc) 75%),
+                linear-gradient(-45deg, transparent 75%, var(--pattern-color, #0088cc) 75%);
+            background-size: 100px 100px;
+            background-position: 0 0, 0 50px, 50px -50px, -50px 0px;
+        }
+
+        .zigzag {
+            background: 
+                linear-gradient(135deg, var(--pattern-color, #FF5733) 25%, transparent 25%) -50px 0,
+                linear-gradient(225deg, var(--pattern-color, #FF5733) 25%, transparent 25%) -50px 0,
+                linear-gradient(315deg, var(--pattern-color, #FF5733) 25%, transparent 25%),
+                linear-gradient(45deg, var(--pattern-color, #FF5733) 25%, transparent 25%);
+            background-size: 100px 100px;
+        }
+
+        .dots {
+            background: 
+                radial-gradient(circle, var(--pattern-color, #C70039) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .waves {
+            background: 
+                radial-gradient(circle at 100% 50%, transparent 20%, var(--pattern-color, #900C3F) 21%, 
+                var(--pattern-color, #900C3F) 34%, transparent 35%, transparent),
+                radial-gradient(circle at 0% 50%, transparent 20%, var(--pattern-color, #900C3F) 21%, 
+                var(--pattern-color, #900C3F) 34%, transparent 35%, transparent) 0 -50px;
+            background-size: 100px 100px;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slide {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        @keyframes pulse-opacity {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes color-shift {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .banner {
+            width: 100%;
+            background-color: var(--banner-color, #FF0000);
+            color: white;
+            text-align: center;
+            padding: 2% 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 0;
+        }
+
+        .banner h1 {
+            margin: 0;
+            font-size: clamp(20px, 4vw, 40px);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .word {
+            color: #FFFF00;
+            font-weight: bold;
+        }
+
+        .emoji-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5%;
+            height: 60%;
+            padding: 20px;
+        }
+
+        .emoji-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 22%;
+            aspect-ratio: 1/1;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            border: 3px dashed rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .emoji-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .emoji-wrapper.no-outline {
+            border: none !important;
+        }
+
+        .emoji-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .emoji-image.stretch {
+            object-fit: fill !important;
+            width: 100%;
+            height: 100%;
+        }
+
+        .emoji-placeholder {
+            font-size: clamp(30px, 8vw, 80px);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+
+        /* Animation Classes */
+        .zoom-in {
+            animation: zoomIn var(--animation-speed, 2s) infinite alternate;
+        }
+        .zoom-out {
+            animation: zoomOut var(--animation-speed, 2s) infinite alternate;
+        }
+        .fade-in {
+            animation: fadeIn var(--animation-speed, 2s) infinite alternate;
+        }
+        .fade-out {
+            animation: fadeOut var(--animation-speed, 2s) infinite alternate;
+        }
+        .rotate {
+            animation: rotateEmoji var(--animation-speed, 2s) infinite linear;
+        }
+        .bounce {
+            animation: bounce var(--animation-speed, 2s) infinite;
+        }
+        .shake {
+            animation: shake var(--animation-speed, 0.5s) infinite;
+        }
+        .pulse {
+            animation: pulse var(--animation-speed, 2s) infinite;
+        }
+        .flip {
+            animation: flip var(--animation-speed, 2s) infinite;
+        }
+        .swing {
+            animation: swing var(--animation-speed, 2s) infinite;
+        }
+        .wobble {
+            animation: wobble var(--animation-speed, 1s) infinite;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(1); }
+            to { transform: scale(1.2); }
+        }
+        @keyframes zoomOut {
+            from { transform: scale(1.2); }
+            to { transform: scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0.5; }
+        }
+        @keyframes rotateEmoji {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes flip {
+            0% { transform: perspective(400px) rotateY(0); }
+            50% { transform: perspective(400px) rotateY(180deg); }
+            100% { transform: perspective(400px) rotateY(360deg); }
+        }
+        @keyframes swing {
+            20% { transform: rotate(15deg); }
+            40% { transform: rotate(-10deg); }
+            60% { transform: rotate(5deg); }
+            80% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+        @keyframes wobble {
+            0%, 100% { transform: translateX(0%); }
+            15% { transform: translateX(-25%) rotate(-5deg); }
+            30% { transform: translateX(20%) rotate(3deg); }
+            45% { transform: translateX(-15%) rotate(-3deg); }
+            60% { transform: translateX(10%) rotate(2deg); }
+            75% { transform: translateX(-5%) rotate(-1deg); }
+        }
+
+        .plus {
+            font-size: clamp(20px, 6vw, 60px);
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* Combined Control Panel Styles */
+        .control-panel {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            max-height: 50vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            transition: all 0.3s ease;
+        }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .panel-section {
+            margin-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
+        }
+
+        .panel-section h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 15px;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 25px;
-            background-color: #1a1a23;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            z-index: 100;
-        }
-        
-        .left-section {
-            display: flex;
-            align-items: center;
-        }
-        
-        .menu-icon {
-            margin-right: 20px;
-            font-size: 22px;
-            cursor: pointer;
-            color: #00ff88;
-        }
-        
-        .logo {
-            height: 32px;
-            cursor: pointer;
-        }
-        
-        .center-section {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-            max-width: 600px;
-            margin: 0 30px;
-        }
-        
-        .search-bar {
-            flex-grow: 1;
-            padding: 12px 18px;
-            border: none;
-            border-radius: 25px 0 0 25px;
-            font-size: 16px;
-            outline: none;
-            background-color: #2a2a35;
-            color: white;
-        }
-        
-        .search-button {
-            padding: 12px 22px;
-            border: none;
-            border-radius: 0 25px 25px 0;
-            background-color: #00ff88;
-            color: #1a1a23;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .right-section {
-            display: flex;
-            align-items: center;
-        }
-        
-        .nav-icon {
-            margin-left: 25px;
-            font-size: 22px;
-            cursor: pointer;
-            color: #d1d1d1;
-        }
-        
-        /* Main Content */
-        .container {
-            display: flex;
-            padding: 20px;
-        }
-        
-        /* Gaming Sidebar */
-        .sidebar {
-            width: 240px;
-            padding-right: 20px;
-        }
-        
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            cursor: pointer;
-            border-radius: 8px;
-            margin-bottom: 5px;
-            color: #d1d1d1;
-        }
-        
-        .sidebar-item:hover {
-            background-color: #2a2a35;
-            color: white;
-        }
-        
-        .sidebar-icon {
-            margin-right: 15px;
-            font-size: 20px;
-        }
-        
-        .sidebar-title {
-            margin: 20px 0 10px 15px;
-            font-size: 14px;
-            color: #6a6a75;
-            text-transform: uppercase;
-        }
-        
-        /* Sidebar Ad Space */
-        .sidebar-ad {
-            margin-top: 25px;
-            padding: 15px;
-            background-color: #2a2a35;
-            border-radius: 10px;
-            text-align: center;
-        }
-        
-        /* Main Content */
-        .main-content {
-            flex-grow: 1;
-        }
-        
-        .banner {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(135deg, #00ff88, #00ccff);
-            border-radius: 10px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            padding: 0 40px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .banner-content {
-            z-index: 2;
-            max-width: 50%;
-        }
-        
-        .banner h1 {
-            font-size: 36px;
-            margin-bottom: 15px;
-        }
-        
-        .banner p {
-            font-size: 16px;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .play-now-btn {
-            padding: 12px 25px;
-            background-color: #1a1a23;
-            color: #00ff88;
-            border: none;
+            padding: 5px;
             border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .panel-section h3:hover {
+            background-color: #f5f5f5;
+        }
+
+        .panel-section h3::after {
+            content: "−";
             font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
+            color: #666;
         }
-        
-        .banner-pattern {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            opacity: 0.1;
+
+        .panel-section.collapsed h3::after {
+            content: "+";
         }
-        
-        .categories {
-            display: flex;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 10px;
+
+        .panel-section.collapsed .panel-content {
+            display: none;
         }
-        
-        .category {
-            padding: 8px 16px;
-            margin-right: 10px;
-            background-color: #2a2a35;
-            border-radius: 20px;
-            cursor: pointer;
-            white-space: nowrap;
-            color: #d1d1d1;
+
+        .panel-content {
+            transition: all 0.3s ease;
         }
-        
-        .category.active {
-            background-color: #00ff88;
-            color: #1a1a23;
-        }
-        
-        .games {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        
-        .game-card {
-            background-color: #1a1a23;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        
-        .game-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .thumbnail {
-            width: 100%;
-            height: 160px;
-            background-color: #2a2a35;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .players {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
+
+        .emoji-upload-btn {
+            background: #4CAF50;
             color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 13px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .emoji-upload-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .emoji-upload-btn:active {
+            transform: translateY(0);
+        }
+
+        .emoji-upload-btn input {
+            display: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .emoji-preview {
+            text-align: center;
+            margin: 10px 0;
+            min-height: 20px;
             font-size: 12px;
+            color: #666;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .reset-btn {
+            background-color: #f44336;
+            margin-top: 8px;
+        }
+
+        .reset-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        .checkbox-group {
             display: flex;
             align-items: center;
+            margin: 8px 0;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
         }
-        
-        .players i {
-            margin-right: 5px;
+
+        .checkbox-group:hover {
+            background-color: #f5f5f5;
         }
-        
-        .game-info {
-            padding: 15px;
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
         }
-        
-        .game-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .game-desc {
-            color: #a1a1aa;
+
+        .checkbox-group label {
             font-size: 13px;
-            margin-bottom: 12px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-height: 1.4;
+            color: #555;
+            cursor: pointer;
         }
-        
-        .play-btn {
+
+        .dropdown-group {
+            margin: 12px 0;
+        }
+
+        .dropdown-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .dropdown-group select {
             width: 100%;
             padding: 8px;
-            background-color: #00ff88;
-            color: #1a1a23;
-            border: none;
-            border-radius: 5px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        .range-group {
+            margin: 15px 0;
+        }
+
+        .range-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #555;
             font-weight: bold;
+        }
+
+        .range-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .range-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4CAF50;
             cursor: pointer;
         }
-        
-        /* In-content Ad Space */
-        .in-content-ad {
-            grid-column: 1 / -1;
-            padding: 20px;
-            background-color: #2a2a35;
-            border-radius: 10px;
+
+        .range-value {
+            font-size: 12px;
+            color: #777;
             text-align: center;
-            margin: 20px 0;
+            margin-top: 5px;
         }
         
-        /* Featured Games Section */
-        .section-title {
-            font-size: 22px;
-            margin: 30px 0 20px 0;
+        .result-image-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .timer-controls {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .timer-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        
+        .countdown-display {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+            min-height: 30px;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+        
+        .result-text-container {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            display: none;
+            z-index: 10;
+            padding: 0 20px;
+        }
+        
+        .result-text {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: clamp(12px, 2vw, 24px);
+            display: inline-block;
+            max-width: 80%;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .text-input-container {
+            margin-top: 15px;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        
+        .guess-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .guess-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        
+        .word-display {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+            min-height: 20px;
+            cursor: pointer;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .word-display:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .export-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .export-btn {
+            background-color: #2196F3;
+        }
+        
+        .export-btn:hover {
+            background-color: #0b7dda;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 6px;
+            margin-top: 12px;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #4CAF50, #2E7D32);
+            border-radius: 6px;
+            width: 0%;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-size: 12px;
+            transition: width 0.3s ease;
+        }
+        
+        .export-options {
             display: flex;
-            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
         }
         
-        .section-title i {
-            margin-right: 10px;
-            color: #00ff88;
+        .export-options button {
+            flex: 1;
+        }
+        
+        .resolution-options {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
         }
 
-        /* No results message */
-        .no-results {
-            grid-column: 1 / -1;
+        .resolution-btn {
+            padding: 6px;
+            font-size: 12px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .resolution-btn:hover {
+            background-color: #d0d0d0;
+        }
+
+        .resolution-btn.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .export-status {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #555;
             text-align: center;
-            padding: 40px;
-            color: #a1a1aa;
-            font-size: 18px;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
         }
 
-        /* Responsive adjustments */
+        /* Footer Styles */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 14px;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .protection-check {
+            display: none;
+        }
+
+        /* Tamper message */
+        .tamper-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f0f0f0;
+            z-index: 9999;
+            text-align: center;
+            padding: 50px;
+            font-size: 24px;
+            color: red;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
         @media (max-width: 768px) {
-            .container {
+            .control-panel {
+                width: 95%;
+                max-height: 60vh;
+            }
+            
+            .panel-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .resolution-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .emoji-container {
                 flex-direction: column;
+                height: auto;
+                gap: 15px;
+            }
+
+            .emoji-wrapper {
+                width: 60%;
+            }
+
+            .plus {
+                transform: rotate(90deg);
             }
             
-            .sidebar {
-                width: 100%;
-                padding-right: 0;
-                margin-bottom: 20px;
-            }
-            
-            .banner-content {
-                max-width: 100%;
-            }
-            
-            .banner h1 {
-                font-size: 28px;
+            .footer {
+                font-size: 12px;
+                padding: 8px;
             }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <!-- Sticky Gaming Navbar -->
-    <nav class="navbar">
-        <div class="left-section">
-            <div class="menu-icon"><i class="fas fa-gamepad"></i></div>
-            <img src="https://via.placeholder.com/150x40/00ff88/1a1a23?text=Alien+BaBa+Games" alt="Alien BaBa Games Logo" class="logo">
-        </div>
-        
-        <div class="center-section">
-            <input type="text" class="search-bar" id="searchInput" placeholder="Search games..." aria-label="Search games">
-            <button class="search-button" id="searchButton">Search</button>
-        </div>
-        
-        <div class="right-section">
-            <div class="nav-icon" aria-label="Leaderboard"><i class="fas fa-trophy"></i></div>
-            <div class="nav-icon" aria-label="Favorites"><i class="fas fa-heart"></i></div>
-        </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <div class="container">
-        <!-- Gaming Sidebar -->
-        <aside class="sidebar">
-            <nav>
-                <div class="sidebar-item" data-category="all">
-                    <div class="sidebar-icon"><i class="fas fa-home"></i></div>
-                    <span>Home</span>
-                </div>
-                <div class="sidebar-item" data-category="popular">
-                    <div class="sidebar-icon"><i class="fas fa-fire"></i></div>
-                    <span>Popular</span>
-                </div>
-                <div class="sidebar-item" data-category="new">
-                    <div class="sidebar-icon"><i class="fas fa-star"></i></div>
-                    <span>New Releases</span>
-                </div>
-                <div class="sidebar-item" data-category="multiplayer">
-                    <div class="sidebar-icon"><i class="fas fa-users"></i></div>
-                    <span>Multiplayer</span>
-                </div>
-                
-                <div class="sidebar-title">Categories</div>
-                
-                <div class="sidebar-item" data-category="racing">
-                    <div class="sidebar-icon"><i class="fas fa-car"></i></div>
-                    <span>Racing</span>
-                </div>
-                <div class="sidebar-item" data-category="shooter">
-                    <div class="sidebar-icon"><i class="fas fa-gun"></i></div>
-                    <span>Shooter</span>
-                </div>
-                <div class="sidebar-item" data-category="strategy">
-                    <div class="sidebar-icon"><i class="fas fa-chess"></i></div>
-                    <span>Strategy</span>
-                </div>
-                <div class="sidebar-item" data-category="puzzle">
-                    <div class="sidebar-icon"><i class="fas fa-puzzle-piece"></i></div>
-                    <span>Puzzle</span>
-                </div>
-                <div class="sidebar-item" data-category="sports">
-                    <div class="sidebar-icon"><i class="fas fa-running"></i></div>
-                    <span>Sports</span>
-                </div>
-            </nav>
-            
-            <!-- Sidebar Ad Space -->
-            <div class="sidebar-ad">
-                <h3>Advertisement</h3>
-                <div style="background-color: #3a3a45; padding: 60px 20px; margin: 10px 0; border-radius: 5px;">
-                    Google Ad (120x240)
-                </div>
-            </div>
-        </aside>
-        
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Featured Game Banner -->
-            <section class="banner">
-                <div class="banner-content">
-                    <h1>Alien Invasion 2023</h1>
-                    <p>Defend Earth from alien attacks in this action-packed shooter game with amazing graphics and multiplayer mode.</p>
-                    <button class="play-now-btn">PLAY NOW</button>
-                </div>
-                <img src="https://via.placeholder.com/600x300/00ff88/1a1a23?text=Alien+Invasion" class="banner-pattern" alt="Alien Invasion Banner">
-            </section>
-            
-            <!-- Game Categories -->
-            <div class="categories" id="categoryFilters">
-                <div class="category active" data-category="all">All Games</div>
-                <div class="category" data-category="action">Action</div>
-                <div class="category" data-category="adventure">Adventure</div>
-                <div class="category" data-category="racing">Racing</div>
-                <div class="category" data-category="puzzle">Puzzle</div>
-                <div class="category" data-category="sports">Sports</div>
-                <div class="category" data-category="strategy">Strategy</div>
-                <div class="category" data-category="shooter">Shooter</div>
-                <div class="category" data-category="multiplayer">Multiplayer</div>
-            </div>
-            
-            <!-- Featured Games Section -->
-            <h2 class="section-title">
-                <i class="fas fa-crown"></i>
-                <span>Featured Games</span>
-            </h2>
-            
-            <div class="games" id="gamesContainer">
-                <!-- Game cards will be dynamically inserted here by JavaScript -->
-            </div>
-        </main>
+    <!-- Tamper message (hidden by default) -->
+    <div class="tamper-message" id="tamperMessage">
+        This application has been tampered with. Please use the original version.
     </div>
 
-    <script>
-        // Game data
-        const games = [
-            {
-                id: 1,
-                title: "Alien Shooter",
-                description: "Fight against alien invaders in this intense first-person shooter with multiple weapons and levels.",
-                category: ["shooter", "action"],
-                players: "45K",
-                isPopular: true,
-                isNew: false,
-                isMultiplayer: true,
-                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Shooter"
-            },
-            {
-                id: 2,
-                title: "Space Race By AlienBaBa",
-                description: "Race through asteroid fields in this futuristic racing game with power-ups and boosts.",
-                category: ["racing", "action"],
-                players: "32K",
-                isPopular: true,
-                isNew: false,
-                isMultiplayer: true,
-                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Space+Race"
-            },
-            {
-                id: 3,
-                title: "Alien Puzzle",
-                description: "Solve challenging puzzles to help the friendly aliens return to their home planet.",
-                category: ["puzzle"],
-                players: "18K",
-                isPopular: false,
-                isNew: false,
-                isMultiplayer: false,
-                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Puzzle"
-            },
-            {
-                id: 4,
-                title: "Alien Soccer",
-                description: "Play soccer with alien teams featuring special abilities and futuristic stadiums.",
-                category: ["sports", "multiplayer"],
-                players: "28K",
-                isPopular: true,
-                isNew: false,
-                isMultiplayer: true,
-                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Soccer"
-            },
-            {
-                id: 5,
-                title: "Alien Strategy",
-                description: "Build your alien civilization and defend against human invasions in this strategy game.",
-                category: ["strategy"],
-                players: "36K",
-                isPopular: false,
-                isNew: true,
-                isMultiplayer: false,
-                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Strategy"
-            },
-            {
-                id: 6,
-                title: "Alien Jewels",
-                description: "Match colorful alien jewels in this addictive puzzle game with special power-ups.",
-                category: ["puzzle"],
-                players: "15K",
-                isPopular: false,
-                isNew: false,
-                isMultiplayer: false,
-                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Jewels"
-            },
-            {
-                id: 7,
-                title: "Alien Adventure",
-                description: "Explore alien planets and solve mysteries in this new action-adventure game.",
-                category: ["adventure", "action"],
-                players: "12K",
-                isPopular: false,
-                isNew: true,
-                isMultiplayer: false,
-                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Adventure"
-            },
-            {
-                id: 8,
-                title: "Alien Wild West",
-                description: "Cowboys meet aliens in this wild west themed shooter with unique weapons.",
-                category: ["shooter", "action"],
-                players: "8K",
-                isPopular: false,
-                isNew: true,
-                isMultiplayer: true,
-                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Wild+West"
-            },
-            {
-                id: 9,
-                title: "Alien Dragons",
-                description: "Collect and train alien dragons with special abilities in this new RPG game.",
-                category: ["strategy"],
-                players: "5K",
-                isPopular: false,
-                isNew: true,
-                isMultiplayer: false,
-                thumbnail: "https://via.placeholder.com/400x225/333333/ffffff?text=Alien+Dragons"
-            }
-        ];
+    <!-- Main Game Container -->
+    <div class="container" id="captureContainer">
+        <!-- Pattern Elements -->
+        <div class="pattern spiral" id="spiralPattern"></div>
+        <div class="pattern whatsapp-doodle" id="whatsappPattern"></div>
+        <div class="pattern telegram-doodle" id="telegramPattern"></div>
+        <div class="pattern zigzag" id="zigzagPattern"></div>
+        <div class="pattern dots" id="dotsPattern"></div>
+        <div class="pattern waves" id="wavesPattern"></div>
+        
+        <div class="content">
+            <div class="banner">
+                <h1>GUESS THE <span class="word" id="targetWord">WORD</span></h1>
+            </div>
 
-        // DOM elements
-        const gamesContainer = document.getElementById('gamesContainer');
-        const searchInput = document.getElementById('searchInput');
-        const searchButton = document.getElementById('searchButton');
-        const categoryFilters = document.querySelectorAll('.category');
-        const sidebarItems = document.querySelectorAll('.sidebar-item');
+            <div class="emoji-container">
+                <div class="emoji-wrapper" id="leftEmojiWrapper">
+                    <img class="emoji-image" id="leftEmojiImage">
+                    <div class="emoji-placeholder" id="leftEmojiPlaceholder">💩</div>
+                </div>
+                <div class="plus">+</div>
+                <div class="emoji-wrapper" id="rightEmojiWrapper">
+                    <img class="emoji-image" id="rightEmojiImage">
+                    <div class="emoji-placeholder" id="rightEmojiPlaceholder">🌽</div>
+                </div>
+                <div class="emoji-wrapper" id="resultEmojiWrapper" style="display: none;">
+                    <img class="emoji-image" id="resultEmojiImage">
+                </div>
+            </div>
+            
+            <div class="result-text-container" id="resultTextContainer">
+                <div class="result-text" id="resultTextDisplay"></div>
+            </div>
+        </div>
+    </div>
 
-        // Current filter state
-        let currentCategory = 'all';
-        let currentSearchTerm = '';
-
-        // Initialize the page
-        function init() {
-            renderGames();
-            setupEventListeners();
-        }
-
-        // Render games based on current filters
-        function renderGames() {
-            gamesContainer.innerHTML = '';
-
-            const filteredGames = games.filter(game => {
-                // Filter by category
-                const categoryMatch = currentCategory === 'all' || 
-                                      game.category.includes(currentCategory) ||
-                                      (currentCategory === 'popular' && game.isPopular) ||
-                                      (currentCategory === 'new' && game.isNew) ||
-                                      (currentCategory === 'multiplayer' && game.isMultiplayer);
-                
-                // Filter by search term
-                const searchMatch = game.title.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
-                                   game.description.toLowerCase().includes(currentSearchTerm.toLowerCase());
-                
-                return categoryMatch && searchMatch;
-            });
-
-            if (filteredGames.length === 0) {
-                gamesContainer.innerHTML = '<div class="no-results">No games found matching your criteria.</div>';
-                return;
-            }
-
-            filteredGames.forEach(game => {
-                const gameCard = document.createElement('div');
-                gameCard.className = 'game-card';
-                gameCard.innerHTML = `
-                    <div class="thumbnail">
-                        <img src="${game.thumbnail}" alt="${game.title}">
-                        <div class="players">
-                            <i class="fas fa-users"></i> ${game.players} playing
+    <!-- Combined Control Panel at Bottom -->
+    <div class="control-panel">
+        <div class="panel-grid">
+            <!-- Left Column -->
+            <div class="panel-column">
+                <div class="panel-section">
+                    <h3>Emoji Selection</h3>
+                    <div class="panel-content">
+                        <div class="emoji-preview" id="leftEmojiPreview">Left: Default</div>
+                        <label class="emoji-upload-btn">
+                            Upload Left Image
+                            <input type="file" id="leftEmojiInput" accept="image/png, image/jpeg, image/jpg">
+                        </label>
+                        <button class="reset-btn" id="resetLeftEmoji">Reset Left</button>
+                        
+                        <div class="emoji-preview" id="rightEmojiPreview">Right: Default</div>
+                        <label class="emoji-upload-btn">
+                            Upload Right Image
+                            <input type="file" id="rightEmojiInput" accept="image/png, image/jpeg, image/jpg">
+                        </label>
+                        <button class="reset-btn" id="resetRightEmoji">Reset Right</button>
+                        
+                        <div class="result-image-section">
+                            <div class="emoji-preview" id="resultEmojiPreview">Result: Not set</div>
+                            <label class="emoji-upload-btn">
+                                Upload Result Image
+                                <input type="file" id="resultEmojiInput" accept="image/png, image/jpeg, image/jpg">
+                            </label>
+                            <button class="reset-btn" id="resetResultEmoji">Reset Result</button>
                         </div>
                     </div>
-                    <div class="game-info">
-                        <h3 class="game-title">${game.title}</h3>
-                        <div class="game-desc">${game.description}</div>
-                        <button class="play-btn">Play Now</button>
+                </div>
+
+                <div class="panel-section">
+                    <h3>Color Settings</h3>
+                    <div class="panel-content">
+                        <div class="dropdown-group">
+                            <label for="bgColor">Background Color:</label>
+                            <input type="color" id="bgColor" value="#87CEEB">
+                        </div>
+                        <button id="applyBackground">Apply Background</button>
+                        
+                        <div class="dropdown-group">
+                            <label for="bannerColor">Banner Color:</label>
+                            <input type="color" id="bannerColor" value="#FF0000">
+                        </div>
+                        <button id="applyBannerColor">Apply Banner Color</button>
                     </div>
-                `;
-                gamesContainer.appendChild(gameCard);
-            });
-        }
+                </div>
+            </div>
 
-        // Set up event listeners
-        function setupEventListeners() {
-            // Search functionality
-            searchButton.addEventListener('click', () => {
-                currentSearchTerm = searchInput.value.trim();
-                renderGames();
+            <!-- Middle Column -->
+            <div class="panel-column">
+                <div class="panel-section">
+                    <h3>Pattern Settings</h3>
+                    <div class="panel-content">
+                        <div class="dropdown-group">
+                            <label for="patternSelect">Select Pattern:</label>
+                            <select id="patternSelect">
+                                <option value="none">No Pattern</option>
+                                <option value="spiral">Spiral</option>
+                                <option value="whatsapp">WhatsApp Doodle</option>
+                                <option value="telegram">Telegram Doodle</option>
+                                <option value="zigzag">Zigzag</option>
+                                <option value="dots">Dots</option>
+                                <option value="waves">Waves</option>
+                            </select>
+                        </div>
+                        
+                        <div class="dropdown-group">
+                            <label for="patternColor">Pattern Color:</label>
+                            <input type="color" id="patternColor" value="#FFD700">
+                        </div>
+                        
+                        <div class="dropdown-group">
+                            <label for="patternAnimation">Pattern Animation:</label>
+                            <select id="patternAnimation">
+                                <option value="none">No Animation</option>
+                                <option value="rotate">Rotate</option>
+                                <option value="slide">Slide</option>
+                                <option value="pulse-opacity">Pulse Opacity</option>
+                                <option value="scale">Scale</option>
+                                <option value="color-shift">Color Shift</option>
+                            </select>
+                        </div>
+                        
+                        <div class="range-group">
+                            <label for="patternOpacity">Pattern Opacity:</label>
+                            <input type="range" id="patternOpacity" min="0.1" max="1" step="0.1" value="0.2">
+                            <div class="range-value" id="opacityValue">0.2</div>
+                        </div>
+                        
+                        <div class="range-group">
+                            <label for="patternSpeed">Animation Speed:</label>
+                            <input type="range" id="patternSpeed" min="1" max="30" step="1" value="20">
+                            <div class="range-value" id="patternSpeedValue">20s</div>
+                        </div>
+                        
+                        <button id="applyPattern">Apply Pattern</button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>Animation Effects</h3>
+                    <div class="panel-content">
+                        <div class="dropdown-group">
+                            <label for="animationSelect">Select Animation:</label>
+                            <select id="animationSelect">
+                                <option value="none">No Animation</option>
+                                <option value="zoom-in">Zoom In</option>
+                                <option value="zoom-out">Zoom Out</option>
+                                <option value="fade-in">Fade In</option>
+                                <option value="fade-out">Fade Out</option>
+                                <option value="rotate">Rotate</option>
+                                <option value="bounce">Bounce</option>
+                                <option value="shake">Shake</option>
+                                <option value="pulse">Pulse</option>
+                                <option value="flip">Flip</option>
+                                <option value="swing">Swing</option>
+                                <option value="wobble">Wobble</option>
+                            </select>
+                        </div>
+                        
+                        <div class="range-group">
+                            <label for="animationSpeed">Animation Speed:</label>
+                            <input type="range" id="animationSpeed" min="0.1" max="5" step="0.1" value="1">
+                            <div class="range-value" id="speedValue">1.0x</div>
+                        </div>
+                        
+                        <button id="applyAnimation">Apply Animation</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="panel-column">
+                <div class="panel-section">
+                    <h3>Image Settings</h3>
+                    <div class="panel-content">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="removeOutlineCheckbox">
+                            <label for="removeOutlineCheckbox">Remove Image Outlines</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="stretchImageCheckbox">
+                            <label for="stretchImageCheckbox">Stretch Images to Fill</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section timer-controls">
+                    <h3>Timer Settings</h3>
+                    <div class="panel-content">
+                        <div class="dropdown-group">
+                            <label for="timerDelay">Show Result After (seconds):</label>
+                            <input type="number" id="timerDelay" class="timer-input" min="1" value="5">
+                        </div>
+                        <div class="text-input-container">
+                            <label for="resultTextInput">Text to show with result:</label>
+                            <input type="text" id="resultTextInput" class="text-input" placeholder="Enter text to display with result">
+                        </div>
+                        <div class="countdown-display" id="countdownDisplay"></div>
+                        <button id="startTimerBtn">Start Timer</button>
+                        <button id="stopTimerBtn" class="reset-btn">Stop Timer</button>
+                    </div>
+                </div>
+                
+                <div class="panel-section guess-section">
+                    <h3>Guess the Word</h3>
+                    <div class="panel-content">
+                        <div class="dropdown-group">
+                            <label for="guessWordInput">Replace "WORD" with:</label>
+                            <input type="text" id="guessWordInput" class="guess-input" placeholder="Enter your word">
+                        </div>
+                        <button id="applyGuessWord">Apply Word</button>
+                        <button id="resetGuessWord" class="reset-btn">Reset to Default</button>
+                        <div class="word-display" id="currentWordDisplay">Current word: WORD</div>
+                    </div>
+                </div>
+                
+                <div class="panel-section export-section">
+                    <h3>Export Video/GIF</h3>
+                    <div class="panel-content">
+                        <div class="dropdown-group">
+                            <label>Resolution:</label>
+                            <div class="resolution-options">
+                                <button class="resolution-btn active" data-resolution="720p">720p</button>
+                                <button class="resolution-btn" data-resolution="1080p">1080p</button>
+                                <button class="resolution-btn" data-resolution="2k">2K</button>
+                                <button class="resolution-btn" data-resolution="4k">4K</button>
+                                <button class="resolution-btn" data-resolution="8k">8K</button>
+                            </div>
+                        </div>
+                        <div class="export-options">
+                            <button id="exportGifBtn" class="export-btn">Export as GIF</button>
+                            <button id="exportMp4Btn" class="export-btn">Export as MP4</button>
+                        </div>
+                        <div class="progress-container" id="progressContainer">
+                            <div class="progress-bar" id="progressBar">0%</div>
+                        </div>
+                        <div class="export-status" id="exportStatus"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer with protection -->
+    <div class="footer">Design by <a href="#" onclick="return false;">Alien BaBa</a></div>
+    <div class="protection-check" id="protectionCheck">AlienBaBaDesign</div>
+
+    <!-- Include required libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.6.2/RecordRTC.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ffmpeg.js/4.2.900/ffmpeg.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        // =============== PROTECTION MECHANISM ===============
+        // First check - runs immediately
+        (function() {
+            const protectionCheck = document.getElementById('protectionCheck');
+            const tamperMessage = document.getElementById('tamperMessage');
+            
+            if (!protectionCheck || protectionCheck.textContent !== 'AlienBaBaDesign') {
+                // Show tamper message and hide all content
+                tamperMessage.style.display = 'block';
+                document.getElementById('captureContainer').style.display = 'none';
+                document.querySelector('.control-panel').style.display = 'none';
+                document.querySelector('.footer').style.display = 'none';
+                
+                // Prevent any further execution
+                throw new Error('Application integrity check failed');
+            }
+        })();
+
+        // Second check - runs after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const protectionCheck = document.getElementById('protectionCheck');
+            const tamperMessage = document.getElementById('tamperMessage');
+            
+            if (!protectionCheck || protectionCheck.textContent !== 'AlienBaBaDesign') {
+                // Show tamper message and hide all content
+                tamperMessage.style.display = 'block';
+                document.getElementById('captureContainer').style.display = 'none';
+                document.querySelector('.control-panel').style.display = 'none';
+                document.querySelector('.footer').style.display = 'none';
+                
+                // Prevent any further execution
+                throw new Error('Application integrity check failed');
+            }
+            
+            // Only initialize if protection check passes
+            initializeControlPanel();
+            
+            // Third check - runs periodically
+            setInterval(function() {
+                const check = document.getElementById('protectionCheck');
+                if (!check || check.textContent !== 'AlienBaBaDesign') {
+                    // Show tamper message and hide all content
+                    tamperMessage.style.display = 'block';
+                    document.getElementById('captureContainer').style.display = 'none';
+                    document.querySelector('.control-panel').style.display = 'none';
+                    document.querySelector('.footer').style.display = 'none';
+                    
+                    // Prevent any further execution
+                    throw new Error('Application integrity check failed');
+                }
+            }, 5000); // Check every 5 seconds
+        });
+
+        // =============== Combined Control Panel Functions ===============
+        function initializeControlPanel() {
+            // DOM Elements
+            const leftEmojiWrapper = document.getElementById('leftEmojiWrapper');
+            const rightEmojiWrapper = document.getElementById('rightEmojiWrapper');
+            const resultEmojiWrapper = document.getElementById('resultEmojiWrapper');
+            const leftEmojiImage = document.getElementById('leftEmojiImage');
+            const rightEmojiImage = document.getElementById('rightEmojiImage');
+            const resultEmojiImage = document.getElementById('resultEmojiImage');
+            const leftEmojiPlaceholder = document.getElementById('leftEmojiPlaceholder');
+            const rightEmojiPlaceholder = document.getElementById('rightEmojiPlaceholder');
+            const leftEmojiInput = document.getElementById('leftEmojiInput');
+            const rightEmojiInput = document.getElementById('rightEmojiInput');
+            const resultEmojiInput = document.getElementById('resultEmojiInput');
+            const leftEmojiPreview = document.getElementById('leftEmojiPreview');
+            const rightEmojiPreview = document.getElementById('rightEmojiPreview');
+            const resultEmojiPreview = document.getElementById('resultEmojiPreview');
+            const resetLeftEmojiBtn = document.getElementById('resetLeftEmoji');
+            const resetRightEmojiBtn = document.getElementById('resetRightEmoji');
+            const resetResultEmojiBtn = document.getElementById('resetResultEmoji');
+            const removeOutlineCheckbox = document.getElementById('removeOutlineCheckbox');
+            const stretchImageCheckbox = document.getElementById('stretchImageCheckbox');
+            const applyBackgroundBtn = document.getElementById('applyBackground');
+            const bgColorInput = document.getElementById('bgColor');
+            const bannerColorInput = document.getElementById('bannerColor');
+            const applyBannerColorBtn = document.getElementById('applyBannerColor');
+            const animationSelect = document.getElementById('animationSelect');
+            const applyAnimationBtn = document.getElementById('applyAnimation');
+            const animationSpeed = document.getElementById('animationSpeed');
+            const speedValue = document.getElementById('speedValue');
+            const timerDelay = document.getElementById('timerDelay');
+            const startTimerBtn = document.getElementById('startTimerBtn');
+            const stopTimerBtn = document.getElementById('stopTimerBtn');
+            const plusSign = document.querySelector('.plus');
+            const countdownDisplay = document.getElementById('countdownDisplay');
+            const resultTextInput = document.getElementById('resultTextInput');
+            const resultTextContainer = document.getElementById('resultTextContainer');
+            const resultTextDisplay = document.getElementById('resultTextDisplay');
+            const targetWordElement = document.getElementById('targetWord');
+            const guessWordInput = document.getElementById('guessWordInput');
+            const applyGuessWordBtn = document.getElementById('applyGuessWord');
+            const resetGuessWordBtn = document.getElementById('resetGuessWord');
+            const currentWordDisplay = document.getElementById('currentWordDisplay');
+            const exportGifBtn = document.getElementById('exportGifBtn');
+            const exportMp4Btn = document.getElementById('exportMp4Btn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const exportStatus = document.getElementById('exportStatus');
+            const captureContainer = document.getElementById('captureContainer');
+            const resolutionOptions = document.querySelectorAll('.resolution-btn');
+            const patternSelect = document.getElementById('patternSelect');
+            const patternColor = document.getElementById('patternColor');
+            const patternAnimation = document.getElementById('patternAnimation');
+            const patternOpacity = document.getElementById('patternOpacity');
+            const opacityValue = document.getElementById('opacityValue');
+            const patternSpeed = document.getElementById('patternSpeed');
+            const patternSpeedValue = document.getElementById('patternSpeedValue');
+            const applyPatternBtn = document.getElementById('applyPattern');
+            const spiralPattern = document.getElementById('spiralPattern');
+            const whatsappPattern = document.getElementById('whatsappPattern');
+            const telegramPattern = document.getElementById('telegramPattern');
+            const zigzagPattern = document.getElementById('zigzagPattern');
+            const dotsPattern = document.getElementById('dotsPattern');
+            const wavesPattern = document.getElementById('wavesPattern');
+            
+            // Animation classes to remove
+            const animationClasses = [
+                'zoom-in', 'zoom-out', 'fade-in', 'fade-out', 'rotate', 
+                'bounce', 'shake', 'pulse', 'flip', 'swing', 'wobble'
+            ];
+            
+            // Timer variables
+            let resultTimer = null;
+            let countdownInterval = null;
+            let remainingTime = 0;
+            
+            // Video recording variables
+            let mediaRecorder;
+            let recordedChunks = [];
+            let isRecording = false;
+            let selectedResolution = '720p';
+            
+            // Resolution to dimensions mapping
+            const resolutionMap = {
+                '720p': { width: 1280, height: 720 },
+                '1080p': { width: 1920, height: 1080 },
+                '2k': { width: 2560, height: 1440 },
+                '4k': { width: 3840, height: 2160 },
+                '8k': { width: 7680, height: 4320 }
+            };
+
+            // Make panel sections collapsible
+            document.querySelectorAll('.panel-section h3').forEach(header => {
+                header.addEventListener('click', function() {
+                    const section = this.parentElement;
+                    section.classList.toggle('collapsed');
+                });
             });
 
-            searchInput.addEventListener('keyup', (e) => {
-                if (e.key === 'Enter') {
-                    currentSearchTerm = searchInput.value.trim();
-                    renderGames();
+            // Initialize resolution selection
+            resolutionOptions.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    resolutionOptions.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedResolution = this.dataset.resolution;
+                });
+            });
+
+            // Update speed display
+            animationSpeed.addEventListener('input', function() {
+                speedValue.textContent = this.value + 'x';
+            });
+            
+            // Update pattern opacity display
+            patternOpacity.addEventListener('input', function() {
+                opacityValue.textContent = this.value;
+            });
+            
+            // Update pattern speed display
+            patternSpeed.addEventListener('input', function() {
+                patternSpeedValue.textContent = this.value + 's';
+            });
+            
+            // Apply pattern settings
+            applyPatternBtn.addEventListener('click', function() {
+                // Hide all patterns first
+                document.querySelectorAll('.pattern').forEach(pattern => {
+                    pattern.style.display = 'none';
+                });
+                
+                const selectedPattern = patternSelect.value;
+                const color = patternColor.value;
+                const animation = patternAnimation.value;
+                const opacity = patternOpacity.value;
+                const speed = patternSpeed.value;
+                
+                if (selectedPattern === 'none') {
+                    return;
+                }
+                
+                // Set CSS variables
+                document.documentElement.style.setProperty('--pattern-color', color);
+                document.documentElement.style.setProperty('--pattern-opacity', opacity);
+                document.documentElement.style.setProperty('--pattern-animation-speed', speed + 's');
+                
+                // Show selected pattern
+                const patternElement = document.getElementById(selectedPattern + 'Pattern');
+                patternElement.style.display = 'block';
+                
+                // Apply animation
+                if (animation !== 'none') {
+                    document.documentElement.style.setProperty('--pattern-animation', animation);
+                } else {
+                    document.documentElement.style.setProperty('--pattern-animation', 'none');
+                }
+            });
+            
+            // Apply animation
+            applyAnimationBtn.addEventListener('click', function() {
+                const selectedAnimation = animationSelect.value;
+                const speed = animationSpeed.value;
+                
+                // Set animation speed CSS variable
+                document.documentElement.style.setProperty('--animation-speed', speed + 's');
+                
+                // Remove all animation classes first
+                animationClasses.forEach(className => {
+                    leftEmojiWrapper.classList.remove(className);
+                    rightEmojiWrapper.classList.remove(className);
+                    resultEmojiWrapper.classList.remove(className);
+                });
+                
+                // Apply to all emoji boxes
+                if (selectedAnimation !== 'none') {
+                    leftEmojiWrapper.classList.add(selectedAnimation);
+                    rightEmojiWrapper.classList.add(selectedAnimation);
+                    resultEmojiWrapper.classList.add(selectedAnimation);
+                }
+            });
+            
+            // Handle image selection
+            leftEmojiInput.addEventListener('change', function(e) {
+                handleImageSelection(e, 'left');
+            });
+            
+            rightEmojiInput.addEventListener('change', function(e) {
+                handleImageSelection(e, 'right');
+            });
+            
+            resultEmojiInput.addEventListener('change', function(e) {
+                handleImageSelection(e, 'result');
+            });
+            
+            function handleImageSelection(event, side) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageUrl = e.target.result;
+                    
+                    if (side === 'left') {
+                        leftEmojiImage.src = imageUrl;
+                        leftEmojiImage.style.display = 'block';
+                        leftEmojiPlaceholder.style.display = 'none';
+                        leftEmojiPreview.textContent = "Left: " + file.name;
+                        if (!removeOutlineCheckbox.checked) {
+                            leftEmojiWrapper.style.border = "3px solid rgba(255, 255, 255, 0.8)";
+                        }
+                    } else if (side === 'right') {
+                        rightEmojiImage.src = imageUrl;
+                        rightEmojiImage.style.display = 'block';
+                        rightEmojiPlaceholder.style.display = 'none';
+                        rightEmojiPreview.textContent = "Right: " + file.name;
+                        if (!removeOutlineCheckbox.checked) {
+                            rightEmojiWrapper.style.border = "3px solid rgba(255, 255, 255, 0.8)";
+                        }
+                    } else if (side === 'result') {
+                        resultEmojiImage.src = imageUrl;
+                        resultEmojiImage.style.display = 'block';
+                        resultEmojiPreview.textContent = "Result: " + file.name;
+                        if (!removeOutlineCheckbox.checked) {
+                            resultEmojiWrapper.style.border = "3px solid rgba(255, 255, 255, 0.8)";
+                        }
+                    }
+                    
+                    // Apply stretch if checkbox is checked
+                    if (stretchImageCheckbox.checked) {
+                        if (side === 'left') {
+                            leftEmojiImage.classList.add('stretch');
+                        } else if (side === 'right') {
+                            rightEmojiImage.classList.add('stretch');
+                        } else if (side === 'result') {
+                            resultEmojiImage.classList.add('stretch');
+                        }
+                    } else {
+                        if (side === 'left') {
+                            leftEmojiImage.classList.remove('stretch');
+                        } else if (side === 'right') {
+                            rightEmojiImage.classList.remove('stretch');
+                        } else if (side === 'result') {
+                            resultEmojiImage.classList.remove('stretch');
+                        }
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // Reset buttons
+            resetLeftEmojiBtn.addEventListener('click', function() {
+                leftEmojiImage.src = '';
+                leftEmojiImage.style.display = 'none';
+                leftEmojiPlaceholder.style.display = 'block';
+                leftEmojiPreview.textContent = "Left: Default";
+                leftEmojiWrapper.style.border = "3px dashed rgba(255, 255, 255, 0.5)";
+                leftEmojiInput.value = '';
+                leftEmojiImage.classList.remove('stretch');
+                // Remove animations
+                animationClasses.forEach(className => {
+                    leftEmojiWrapper.classList.remove(className);
+                    leftEmojiPlaceholder.classList.remove(className);
+                });
+            });
+            
+            resetRightEmojiBtn.addEventListener('click', function() {
+                rightEmojiImage.src = '';
+                rightEmojiImage.style.display = 'none';
+                rightEmojiPlaceholder.style.display = 'block';
+                rightEmojiPreview.textContent = "Right: Default";
+                rightEmojiWrapper.style.border = "3px dashed rgba(255, 255, 255, 0.5)";
+                rightEmojiInput.value = '';
+                rightEmojiImage.classList.remove('stretch');
+                // Remove animations
+                animationClasses.forEach(className => {
+                    rightEmojiWrapper.classList.remove(className);
+                    rightEmojiPlaceholder.classList.remove(className);
+                });
+            });
+            
+            resetResultEmojiBtn.addEventListener('click', function() {
+                resultEmojiImage.src = '';
+                resultEmojiImage.style.display = 'none';
+                resultEmojiPreview.textContent = "Result: Not set";
+                resultEmojiWrapper.style.border = "3px dashed rgba(255, 255, 255, 0.5)";
+                resultEmojiInput.value = '';
+                resultEmojiImage.classList.remove('stretch');
+                // Remove animations
+                animationClasses.forEach(className => {
+                    resultEmojiWrapper.classList.remove(className);
+                });
+            });
+            
+            // Click on wrappers to trigger file selection
+            leftEmojiWrapper.addEventListener('click', function() {
+                leftEmojiInput.click();
+            });
+            
+            rightEmojiWrapper.addEventListener('click', function() {
+                rightEmojiInput.click();
+            });
+            
+            resultEmojiWrapper.addEventListener('click', function() {
+                resultEmojiInput.click();
+            });
+            
+            // Background settings
+            applyBackgroundBtn.addEventListener('click', function() {
+                document.documentElement.style.setProperty('--bg-color', bgColorInput.value);
+            });
+            
+            // Banner color settings
+            applyBannerColorBtn.addEventListener('click', function() {
+                document.documentElement.style.setProperty('--banner-color', bannerColorInput.value);
+            });
+            
+            // Remove outline checkbox
+            removeOutlineCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    leftEmojiWrapper.classList.add('no-outline');
+                    rightEmojiWrapper.classList.add('no-outline');
+                    resultEmojiWrapper.classList.add('no-outline');
+                } else {
+                    leftEmojiWrapper.classList.remove('no-outline');
+                    rightEmojiWrapper.classList.remove('no-outline');
+                    resultEmojiWrapper.classList.remove('no-outline');
+                    
+                    // Restore borders if images are present
+                    if (leftEmojiImage.style.display === 'block') {
+                        leftEmojiWrapper.style.border = "3px solid rgba(255, 255, 255, 0.8)";
+                    } else {
+                        leftEmojiWrapper.style.border = "3px dashed rgba(255, 255, 255, 0.5)";
+                    }
+                    
+                    if (rightEmojiImage.style.display === 'block') {
+                        rightEmojiWrapper.style.border = "3px solid rgba(255, 255, 255, 0.8)";
+                    } else {
+                        rightEmojiWrapper.style.border = "3px dashed rgba(255, 255, 255, 0.5)";
+                    }
+                    
+                    if (resultEmojiImage.style.display === 'block') {
+                        resultEmojiWrapper.style.border = "3px solid rgba(255, 255, 255, 0.8)";
+                    } else {
+                        resultEmojiWrapper.style.border = "3px dashed rgba(255, 255, 255, 0.5)";
+                    }
+                }
+            });
+            
+            // Stretch image checkbox
+            stretchImageCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    leftEmojiImage.classList.add('stretch');
+                    rightEmojiImage.classList.add('stretch');
+                    resultEmojiImage.classList.add('stretch');
+                } else {
+                    leftEmojiImage.classList.remove('stretch');
+                    rightEmojiImage.classList.remove('stretch');
+                    resultEmojiImage.classList.remove('stretch');
+                }
+            });
+            
+            // Timer functions
+            function showResultImage() {
+                if (resultEmojiImage.src && resultEmojiImage.style.display === 'block') {
+                    leftEmojiWrapper.style.display = 'none';
+                    rightEmojiWrapper.style.display = 'none';
+                    plusSign.style.display = 'none';
+                    resultEmojiWrapper.style.display = 'flex';
+                    countdownDisplay.textContent = '';
+                    
+                    // Show the result text if any was entered
+                    if (resultTextInput.value.trim() !== '') {
+                        resultTextDisplay.textContent = resultTextInput.value.trim();
+                        resultTextContainer.style.display = 'block';
+                    } else {
+                        resultTextContainer.style.display = 'none';
+                    }
+                }
+            }
+            
+            function hideResultImage() {
+                leftEmojiWrapper.style.display = 'flex';
+                rightEmojiWrapper.style.display = 'flex';
+                plusSign.style.display = 'block';
+                resultEmojiWrapper.style.display = 'none';
+                countdownDisplay.textContent = '';
+                resultTextContainer.style.display = 'none';
+            }
+            
+            function updateCountdown() {
+                remainingTime--;
+                countdownDisplay.textContent = `Showing in: ${remainingTime}s`;
+                
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    showResultImage();
+                }
+            }
+            
+            startTimerBtn.addEventListener('click', function() {
+                const delaySeconds = parseInt(timerDelay.value) || 5;
+                
+                // Clear any existing timers
+                if (resultTimer) {
+                    clearTimeout(resultTimer);
+                }
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+                
+                // Hide result image first (in case it's showing)
+                hideResultImage();
+                
+                // Set up countdown
+                remainingTime = delaySeconds;
+                countdownDisplay.textContent = `Showing in: ${remainingTime}s`;
+                
+                // Start countdown interval
+                countdownInterval = setInterval(updateCountdown, 1000);
+                
+                // Start new timer as backup
+                resultTimer = setTimeout(function() {
+                    clearInterval(countdownInterval);
+                    showResultImage();
+                }, delaySeconds * 1000);
+            });
+            
+            stopTimerBtn.addEventListener('click', function() {
+                if (resultTimer || countdownInterval) {
+                    clearTimeout(resultTimer);
+                    clearInterval(countdownInterval);
+                    resultTimer = null;
+                    countdownInterval = null;
+                    hideResultImage();
+                }
+            });
+            
+            // Guess Word functionality
+            applyGuessWordBtn.addEventListener('click', function() {
+                const newWord = guessWordInput.value.trim();
+                if (newWord) {
+                    targetWordElement.textContent = newWord;
+                    currentWordDisplay.textContent = `Current word: ${newWord}`;
+                    guessWordInput.value = '';
+                }
+            });
+            
+            resetGuessWordBtn.addEventListener('click', function() {
+                targetWordElement.textContent = 'WORD';
+                currentWordDisplay.textContent = 'Current word: WORD';
+                guessWordInput.value = '';
+            });
+            
+            // Allow clicking on the current word display to edit it
+            currentWordDisplay.addEventListener('click', function() {
+                const currentWord = targetWordElement.textContent;
+                guessWordInput.value = currentWord;
+                guessWordInput.focus();
+            });
+            
+            // Helper function to scale canvas while maintaining aspect ratio
+            function scaleCanvas(canvas, targetWidth, targetHeight) {
+                const scaledCanvas = document.createElement('canvas');
+                scaledCanvas.width = targetWidth;
+                scaledCanvas.height = targetHeight;
+                const ctx = scaledCanvas.getContext('2d');
+                
+                // Calculate scaling while maintaining 16:9 aspect ratio
+                const scale = Math.min(
+                    targetWidth / canvas.width,
+                    targetHeight / canvas.height
+                );
+                
+                const newWidth = canvas.width * scale;
+                const newHeight = canvas.height * scale;
+                
+                // Center the scaled content
+                const offsetX = (targetWidth - newWidth) / 2;
+                const offsetY = (targetHeight - newHeight) / 2;
+                
+                ctx.fillStyle = document.documentElement.style.getPropertyValue('--bg-color') || '#87CEEB';
+                ctx.fillRect(0, 0, targetWidth, targetHeight);
+                ctx.drawImage(canvas, offsetX, offsetY, newWidth, newHeight);
+                return scaledCanvas;
+            }
+
+            // Enhanced export functions
+            exportGifBtn.addEventListener('click', async function() {
+                if (!resultEmojiImage.src || resultEmojiImage.style.display !== 'block') {
+                    alert('Please set a result image first');
+                    return;
+                }
+                
+                const { width, height } = resolutionMap[selectedResolution];
+                const delay = parseInt(timerDelay.value) || 5;
+                const totalFrames = (delay + 3) * 10; // 10 frames per second
+                let framesCaptured = 0;
+                
+                progressContainer.style.display = 'block';
+                progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
+                exportStatus.textContent = 'Preparing GIF export...';
+                
+                // Disable buttons during export
+                exportGifBtn.disabled = true;
+                exportMp4Btn.disabled = true;
+                
+                try {
+                    // Create GIF with selected resolution
+                    const gif = new GIF({
+                        workers: 4,
+                        quality: 10,
+                        width: width,
+                        height: height,
+                        workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'
+                    });
+                    
+                    // Capture initial state
+                    hideResultImage();
+                    
+                    // Capture frames before transition
+                    for (let i = 0; i < delay * 10; i++) {
+                        if (i % 5 === 0) {
+                            exportStatus.textContent = `Capturing frame ${i+1} of ${totalFrames}...`;
+                        }
+                        
+                        const canvas = await html2canvas(captureContainer, {
+                            scale: window.devicePixelRatio * 2,
+                            logging: false,
+                            useCORS: true,
+                            backgroundColor: null
+                        });
+                        
+                        // Scale to selected resolution
+                        const scaledCanvas = scaleCanvas(canvas, width, height);
+                        gif.addFrame(scaledCanvas, {delay: 100, copy: true});
+                        
+                        framesCaptured++;
+                        updateProgress(framesCaptured, totalFrames);
+                        await new Promise(resolve => setTimeout(resolve, 50));
+                    }
+                    
+                    // Show result and capture frames after transition
+                    showResultImage();
+                    
+                    // Capture frames after transition (3 seconds)
+                    for (let i = 0; i < 3 * 10; i++) {
+                        if (i % 5 === 0) {
+                            exportStatus.textContent = `Capturing frame ${delay*10 + i+1} of ${totalFrames}...`;
+                        }
+                        
+                        const canvas = await html2canvas(captureContainer, {
+                            scale: window.devicePixelRatio * 2,
+                            logging: false,
+                            useCORS: true,
+                            backgroundColor: null
+                        });
+                        
+                        const scaledCanvas = scaleCanvas(canvas, width, height);
+                        gif.addFrame(scaledCanvas, {delay: 100, copy: true});
+                        
+                        framesCaptured++;
+                        updateProgress(framesCaptured, totalFrames);
+                        await new Promise(resolve => setTimeout(resolve, 50));
+                    }
+                    
+                    gif.on('finished', function(blob) {
+                        exportStatus.textContent = 'Finalizing GIF...';
+                        hideResultImage();
+                        
+                        try {
+                            // Use FileSaver.js for better cross-platform support
+                            saveAs(blob, `guess-the-word-${selectedResolution}.gif`);
+                            exportStatus.textContent = 'GIF exported successfully!';
+                        } catch (e) {
+                            exportStatus.textContent = 'Error saving GIF: ' + e.message;
+                            console.error(e);
+                        }
+                        
+                        setTimeout(() => {
+                            progressContainer.style.display = 'none';
+                            exportStatus.textContent = '';
+                        }, 3000);
+                        
+                        // Re-enable buttons
+                        exportGifBtn.disabled = false;
+                        exportMp4Btn.disabled = false;
+                    });
+                    
+                    gif.on('abort', function() {
+                        exportStatus.textContent = 'GIF export aborted';
+                        progressContainer.style.display = 'none';
+                        exportGifBtn.disabled = false;
+                        exportMp4Btn.disabled = false;
+                    });
+                    
+                    gif.on('error', function(e) {
+                        exportStatus.textContent = 'GIF export error: ' + e.message;
+                        progressContainer.style.display = 'none';
+                        console.error(e);
+                        exportGifBtn.disabled = false;
+                        exportMp4Btn.disabled = false;
+                    });
+                    
+                    exportStatus.textContent = 'Rendering GIF...';
+                    gif.render();
+                    
+                } catch (error) {
+                    exportStatus.textContent = 'Export failed: ' + error.message;
+                    console.error(error);
+                    progressContainer.style.display = 'none';
+                    exportGifBtn.disabled = false;
+                    exportMp4Btn.disabled = false;
                 }
             });
 
-            // Category filter buttons
-            categoryFilters.forEach(button => {
-                button.addEventListener('click', () => {
-                    // Update active class
-                    categoryFilters.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
+            exportMp4Btn.addEventListener('click', async function() {
+                if (!resultEmojiImage.src || resultEmojiImage.style.display !== 'block') {
+                    alert('Please set a result image first');
+                    return;
+                }
+                
+                const { width, height } = resolutionMap[selectedResolution];
+                const delay = parseInt(timerDelay.value) || 5;
+                const totalFrames = (delay + 3) * 10;
+                let framesCaptured = 0;
+                
+                progressContainer.style.display = 'block';
+                progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
+                exportStatus.textContent = 'Preparing video export...';
+                
+                // Disable buttons during export
+                exportGifBtn.disabled = true;
+                exportMp4Btn.disabled = true;
+                
+                try {
+                    // Create a temporary canvas for recording
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = width;
+                    tempCanvas.height = height;
+                    const tempCtx = tempCanvas.getContext('2d');
                     
-                    // Update filter and render games
-                    currentCategory = button.dataset.category;
-                    renderGames();
-                });
+                    // Create video stream from canvas
+                    const stream = tempCanvas.captureStream(10);
+                    mediaRecorder = new MediaRecorder(stream, {
+                        mimeType: 'video/webm;codecs=vp9',
+                        videoBitsPerSecond: selectedResolution === '8k' ? 20000000 : 
+                                           selectedResolution === '4k' ? 15000000 :
+                                           selectedResolution === '2k' ? 10000000 :
+                                           selectedResolution === '1080p' ? 8000000 : 5000000
+                    });
+                    
+                    recordedChunks = [];
+                    
+                    mediaRecorder.ondataavailable = function(e) {
+                        if (e.data.size > 0) {
+                            recordedChunks.push(e.data);
+                        }
+                    };
+                    
+                    mediaRecorder.onstop = async function() {
+                        exportStatus.textContent = 'Processing video...';
+                        hideResultImage();
+                        
+                        try {
+                            const blob = new Blob(recordedChunks, {type: 'video/webm'});
+                            
+                            // For mobile devices, save directly as webm if ffmpeg fails
+                            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                            
+                            if (isMobile) {
+                                try {
+                                    // Try to convert with ffmpeg first
+                                    const mp4Blob = await convertToMP4(blob);
+                                    saveAs(mp4Blob, `guess-the-word-${selectedResolution}.mp4`);
+                                    exportStatus.textContent = 'Video exported successfully!';
+                                } catch (e) {
+                                    // Fallback to webm if conversion fails
+                                    console.warn('MP4 conversion failed, falling back to WEBM', e);
+                                    saveAs(blob, `guess-the-word-${selectedResolution}.webm`);
+                                    exportStatus.textContent = 'Video exported as WEBM (MP4 conversion failed)';
+                                }
+                            } else {
+                                // On desktop, always try to convert to MP4
+                                const mp4Blob = await convertToMP4(blob);
+                                saveAs(mp4Blob, `guess-the-word-${selectedResolution}.mp4`);
+                                exportStatus.textContent = 'Video exported successfully!';
+                            }
+                        } catch (e) {
+                            exportStatus.textContent = 'Error processing video: ' + e.message;
+                            console.error(e);
+                        }
+                        
+                        setTimeout(() => {
+                            progressContainer.style.display = 'none';
+                            exportStatus.textContent = '';
+                        }, 3000);
+                        
+                        // Re-enable buttons
+                        exportGifBtn.disabled = false;
+                        exportMp4Btn.disabled = false;
+                    };
+                    
+                    // Start recording
+                    mediaRecorder.start(100); // Collect data every 100ms
+                    
+                    // Show initial state
+                    hideResultImage();
+                    
+                    // Capture frames before transition
+                    const captureInterval = setInterval(async () => {
+                        try {
+                            if (framesCaptured % 5 === 0) {
+                                exportStatus.textContent = `Capturing frame ${framesCaptured+1} of ${totalFrames}...`;
+                            }
+                            
+                            const canvas = await html2canvas(captureContainer, {
+                                scale: window.devicePixelRatio * 2,
+                                logging: false,
+                                useCORS: true,
+                                backgroundColor: null
+                            });
+                            
+                            // Scale to selected resolution
+                            const scaledCanvas = scaleCanvas(canvas, width, height);
+                            tempCtx.clearRect(0, 0, width, height);
+                            tempCtx.drawImage(scaledCanvas, 0, 0);
+                            
+                            framesCaptured++;
+                            updateProgress(framesCaptured, totalFrames);
+                            
+                            if (framesCaptured >= delay * 10) {
+                                clearInterval(captureInterval);
+                                
+                                // Show result and continue recording
+                                showResultImage();
+                                
+                                // Capture frames after transition
+                                let resultFrames = 0;
+                                const resultInterval = setInterval(async () => {
+                                    try {
+                                        if (resultFrames % 5 === 0) {
+                                            exportStatus.textContent = `Capturing frame ${framesCaptured + resultFrames+1} of ${totalFrames}...`;
+                                        }
+                                        
+                                        const resultCanvas = await html2canvas(captureContainer, {
+                                            scale: window.devicePixelRatio * 2,
+                                            logging: false,
+                                            useCORS: true,
+                                            backgroundColor: null
+                                        });
+                                        
+                                        const scaledResultCanvas = scaleCanvas(resultCanvas, width, height);
+                                        tempCtx.clearRect(0, 0, width, height);
+                                        tempCtx.drawImage(scaledResultCanvas, 0, 0);
+                                        
+                                        resultFrames++;
+                                        updateProgress(framesCaptured + resultFrames, totalFrames);
+                                        
+                                        if (resultFrames >= 3 * 10) {
+                                            clearInterval(resultInterval);
+                                            mediaRecorder.stop();
+                                        }
+                                    } catch (e) {
+                                        clearInterval(resultInterval);
+                                        exportStatus.textContent = 'Error capturing frames: ' + e.message;
+                                        mediaRecorder.stop();
+                                        console.error(e);
+                                    }
+                                }, 100);
+                            }
+                        } catch (e) {
+                            clearInterval(captureInterval);
+                            exportStatus.textContent = 'Error capturing frames: ' + e.message;
+                            mediaRecorder.stop();
+                            console.error(e);
+                        }
+                    }, 100);
+                    
+                } catch (error) {
+                    exportStatus.textContent = 'Export failed: ' + error.message;
+                    console.error(error);
+                    progressContainer.style.display = 'none';
+                    exportGifBtn.disabled = false;
+                    exportMp4Btn.disabled = false;
+                }
             });
 
-            // Sidebar navigation
-            sidebarItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    // Update active class on category buttons
-                    categoryFilters.forEach(btn => btn.classList.remove('active'));
-                    document.querySelector(`.category[data-category="${item.dataset.category}"]`).classList.add('active');
-                    
-                    // Update filter and render games
-                    currentCategory = item.dataset.category;
-                    renderGames();
+            // Helper function to convert webm to mp4
+            async function convertToMP4(webmBlob) {
+                exportStatus.textContent = 'Converting to MP4...';
+                
+                const { createFFmpeg, fetchFile } = FFmpeg;
+                const ffmpeg = createFFmpeg({ 
+                    log: true,
+                    corePath: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js'
                 });
-            });
+                
+                await ffmpeg.load();
+                ffmpeg.FS('writeFile', 'input.webm', await fetchFile(webmBlob));
+                
+                // Adjust quality based on resolution
+                let crf = 22; // Default quality
+                if (selectedResolution === '4k' || selectedResolution === '8k') {
+                    crf = 18; // Higher quality for high resolutions
+                }
+                
+                await ffmpeg.run(
+                    '-i', 'input.webm',
+                    '-c:v', 'libx264',
+                    '-preset', 'slow',
+                    '-crf', crf.toString(),
+                    '-pix_fmt', 'yuv420p',
+                    '-movflags', '+faststart',
+                    '-c:a', 'aac',
+                    '-b:a', '192k',
+                    'output.mp4'
+                );
+                
+                const data = ffmpeg.FS('readFile', 'output.mp4');
+                return new Blob([data.buffer], {type: 'video/mp4'});
+            }
+
+            function updateProgress(current, total) {
+                const percent = Math.round((current / total) * 100);
+                progressBar.style.width = `${percent}%`;
+                progressBar.textContent = `${percent}%`;
+            }
         }
-
-        // Initialize the page when loaded
-        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
